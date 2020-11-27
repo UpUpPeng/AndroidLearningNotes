@@ -10,7 +10,8 @@
 
 # 目录
 
-### Java相关
+### Java系列
 
-1. [Java 内存模型](Java系列/Java内存模型.md)
+1. [Java 内存模型](Java系列/Java内存模型.md) - 2020-11-12
+2. [JVM 内存模型](Java系列/JVM内存模型.md) - 2020-11-16
 
