@@ -1,2 +1,16 @@
-# AndroidLearningNotes
-在Android学习和实践过程中，自己整理的笔记，主要涉及Java和Android。持续更新...
+# Android学习笔记
+
+都是我在 Android 进阶学习和实践过程中，自己整理的笔记，主要涉及 Java 和 Android 两大块内容。
+
+内容都是一些偏底层实现和原理性的知识，不会涉及到入门级别的代码。
+
+会随着不断学习而持续更新！！！有错误内容欢迎批评指正。
+
+
+
+# 目录
+
+### Java相关
+
+1. [Java 内存模型](Java系列/Java内存模型.md)
+
