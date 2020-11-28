@@ -12,12 +12,12 @@
 
 ## Java系列
 
-- [Java 内存模型](Java系列/Java内存模型.md)
-- [JVM 内存模型](Java系列/JVM内存模型.md)
-- [垃圾回收器 GC](Java系列/垃圾回收器GC.md)
-- [类的加载](Java系列/类的加载.md)
-- [4种常量池](Java系列/4种常量池.md)
-- [ThreadLocal](Java系列/ThreadLocal.md)
+- [Java 内存模型](Java/Java内存模型.md)
+- [JVM 内存模型](Java/JVM内存模型.md)
+- [垃圾回收器 GC](Java/垃圾回收器GC.md)
+- [类的加载](Java/类的加载.md)
+- [4种常量池](Java/4种常量池.md)
+- [ThreadLocal](Java/ThreadLocal.md)
   
 </br>
 
@@ -25,7 +25,7 @@
 
 ### 系统核心原理
 
-马上更新...
+- [消息机制](Android/system/消息机制.md)
 
 ### 性能优化
 
