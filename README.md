@@ -12,17 +12,13 @@
 
 ## Java系列
 
-### Java语言
-
 - [Java 内存模型](Java系列/Java内存模型.md)
-- [4种常量池](Java系列/4种常量池.md)
-- [类的加载](Java系列/类的加载.md)
-
-### Java虚拟机
-
 - [JVM 内存模型](Java系列/JVM内存模型.md)
 - [垃圾回收器 GC](Java系列/垃圾回收器GC.md)
-
+- [类的加载](Java系列/类的加载.md)
+- [4种常量池](Java系列/4种常量池.md)
+- [ThreadLocal](Java系列/ThreadLocal.md)
+  
 </br>
 
 ## Android系列
