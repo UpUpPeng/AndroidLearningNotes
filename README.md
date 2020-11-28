@@ -16,6 +16,7 @@
 
 - [Java 内存模型](Java系列/Java内存模型.md)
 - [4种常量池](Java系列/4种常量池.md)
+- [类的加载](Java系列/类的加载.md)
 
 ### Java虚拟机
 
@@ -33,9 +34,3 @@
 ### 性能优化
 
 马上更新...
-
-
-
-![](https://cdn.jsdelivr.net/gh/UpUpPeng/AndroidLearningNotes/img/20201128-200058-01bf8e406889c8ca21b8c706a0527e27.png)
-![](https://cdn.jsdelivr.net/gh/UpUpPeng/AndroidLearningNotes/img/20201128-200058-9b7458d90008396ce74c76d4e98d7aae.png)
-
