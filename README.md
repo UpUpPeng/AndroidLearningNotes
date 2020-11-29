@@ -27,6 +27,7 @@
 
 - [Binder机制](Android/system/Binder机制.md)
 - [消息机制](Android/system/消息机制.md)
+- [事件分发机制](Android/system/事件分发机制.md)
 
 ### 性能优化
 
