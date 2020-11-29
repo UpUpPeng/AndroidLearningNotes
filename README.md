@@ -25,6 +25,7 @@
 
 ### 系统核心原理
 
+- [Binder机制](Android/system/Binder机制.md)
 - [消息机制](Android/system/消息机制.md)
 
 ### 性能优化
