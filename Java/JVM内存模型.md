@@ -18,7 +18,7 @@
 
 .java文件会被编译器编译为.class文件，然后由JVM中的类加载器加载各个类的字节码文件，加载完毕后，交由JVM执行。JVM会用一段空间来存储程序执行期间需要的数据和相关信息，这段空间一般称为Runtime Data Area运行时数据区，也就是[JVM内存](https://www.nowcoder.com/discuss/151138?type=1)。
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-160617-3923f5c96dd72e1c626bdacd9bd30fdb.png)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-160617-3923f5c96dd72e1c626bdacd9bd30fdb.png)
 
 ## 1.1. 程序计数器
 
@@ -58,7 +58,7 @@ JVM 采用 CPU 时间片轮转算法来调度多线程。当被挂起的线程�
 
 与虚拟机栈几乎相同，对象是Native方法。为虚拟机使用到的 Native 方法服务。JVM 规范中对本地方法栈没有强制规定，不同虚拟机可以自由实现。
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-160750-b0b2493329eec5ae6d2e5bc525b081b6.png)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-160750-b0b2493329eec5ae6d2e5bc525b081b6.png)
 
 - 本地方法栈是一个后入先出栈。
 - 由于是线程私有的，生命周期随着线程，线程启动而产生，线程结束而消亡。

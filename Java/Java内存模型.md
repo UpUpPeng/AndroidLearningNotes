@@ -36,7 +36,7 @@
 
 按照数据读取顺序和 CPU 的紧密程度，CPU 的缓存可以分为一级缓存（L1）、二级缓存（L2）、三级缓存（L3），每一级缓存存储的数据都是下一级的一部分。    
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141442-136fd3864df86af57e3870d32b3a1715.png)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141442-136fd3864df86af57e3870d32b3a1715.png)
 
 ## 1.1. 数据加载
 
@@ -49,7 +49,7 @@
 
 加载内存中连续的数据，一般来说是加载连续的 64 个字节，因此，如果访问一个 long 类型（4个字节）的数组时，当数组中的一个值被加载到缓存中时，另外 7 个元素也会被加载到缓存中，这就是 “缓存行” 的概念。
 
-​    ![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141442-c6939b9bf9301a340c91115adf125e9c.png)
+​    ![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141442-c6939b9bf9301a340c91115adf125e9c.png)
 
 ## 1.2. 执行流程
 
@@ -67,7 +67,7 @@ Java 内存模型（Java Memory Model，JMM）是在硬件内存模型基础上�
 
 Java 内存模型规定了所有的变量都存储在主内存中，每条线程还有自己的工作内存（类比 CPU 的高速缓存）。
 
-​    ![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141443-1d8b29cdbe1281c487236b09c054df4b.png)
+​    ![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141443-1d8b29cdbe1281c487236b09c054df4b.png)
 
 - 工作内存中保存着该线程使用到的变量的主内存副本的拷贝。
 - 线程对变量的操作都必须在工作内存中进行，包括读取和赋值等，而不能直接读写主内存中的变量。
@@ -78,7 +78,7 @@ Java 内存模型规定了所有的变量都存储在主内存中，每条线程
 - 主内存：主要对应于硬件内存，堆中对象的实例部分
 - 工作内存：主要对应于 CPU 的高速缓存和寄存器部分，虚拟机栈中的部分区域
 
-​    ![0](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141444-1bfee926268229760efe7827901a498d.png)
+​    ![0](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141444-1bfee926268229760efe7827901a498d.png)
 
 ## 2.2. 主内存与工作内存之间的交互操作
 
@@ -122,7 +122,7 @@ read a ->  load a -> read b -> load b，也可以是read a -> read b -> load b -
 
 原子性是指一段操作一旦开始就会一直运行到底，中间不会被其它线程打断，这段操作可以是单个或多个操作。
 
-​    ![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141444-e9946e1674587abf5db1d6a4634e3f27.png)
+​    ![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141444-e9946e1674587abf5db1d6a4634e3f27.png)
 
 比如对应一个静态全局变量 int i，两个线程同时对它赋值，线程 A 给他赋值 1，线程 B 给他赋值 - 1。那么 i 的值只能是 1 或者 - 1。线程 A 和线程 B 之间是没有干扰的。这就是原子性的特点，不可被中断。
 
@@ -135,7 +135,7 @@ read a ->  load a -> read b -> load b，也可以是read a -> read b -> load b -
 
 Java 内存模型是通过在变更修改后同步回主内存，在变量读取前从主内存刷新变量值来实现的，它是依赖主内存的，无论是普通变量还是 volatile 变量都是如此。
 
-​    ![0](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141444-1d5a52d3b7c43e01b45cbeed97c531d2.png)
+​    ![0](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141444-1d5a52d3b7c43e01b45cbeed97c531d2.png)
 
 第一步：线程 A 执行 i = 1 操作。
 
@@ -251,7 +251,7 @@ volatile 保证了可见性，即一个线程修改了 volatile 变量，在写�
 
 为了提高性能，在遵守 as-if-serial 语义的情况下，编译器和处理器常常会对指令做重排序。
 
-![0](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-141444-3b962c822d00436596153efab022ad9c.png)
+![0](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-141444-3b962c822d00436596153efab022ad9c.png)
 
 分为3种类型：
 

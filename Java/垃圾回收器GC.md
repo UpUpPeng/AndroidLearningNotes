@@ -45,7 +45,7 @@
 
 通过一些GC Roots对象作为起始节点向下搜索，搜索走过的路径称为引用链，当一个对象到GC Roots没有任何引用链可以连接时，表示该对象不可用。能解决循环依赖问题。
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162155-6f7b706208950968045afa7e65631bce.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162155-6f7b706208950968045afa7e65631bce.jpeg)
 
 
 
@@ -169,7 +169,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 ### 1.4.1. 标记清除法
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162654-dbcec754c3fe068a45a7ef472872e1c8.jpeg)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162654-dbcec754c3fe068a45a7ef472872e1c8.jpeg)
 
 - 最基础的垃圾回收算法。
 - 先在内存中把可回收的对象标记出来，再把这些垃圾清理掉变成未使用内存。
@@ -177,7 +177,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 ### 1.4.2. 复制法
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162728-9cfb5827fe6cb78e5b99fedd96673ed2.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162728-9cfb5827fe6cb78e5b99fedd96673ed2.jpeg)
 
 - 由标记清除算法演化而来，没有内存碎片。
 - 将可用内存划分为两块大小相同的区域，每次只用其中的一块；当这块用完了，就将存活对象复制到另一块上，再清除这块的所有空间，保证内存连续可用。
@@ -185,7 +185,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 ### 1.4.3. 标记整理法
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162809-769dfbc8cff2e9b1201d5a335ce3a431.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162809-769dfbc8cff2e9b1201d5a335ce3a431.jpeg)
 
 - 和标记清除算法类似，没有内存碎片。
 - 标记完成之后先把存活对象整理（移动）到同一端，然后再清理掉存活边界以外的内存区域。
@@ -195,7 +195,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 融合了以上3中算法的思想，针对不同情况采用不同的算法进行处理。
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162839-b535e91433d63a5a575d49b3cb1d80ca.jpeg)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162839-b535e91433d63a5a575d49b3cb1d80ca.jpeg)
 
 - **Eden区：**98%的对象生命周期很短，大多数情况下对象都在这里分配，当Eden区没有足够空间时，虚拟机会发起MinorGC，存活的对象将会移动到Survivor的空白子区（不够则直接去Old区），然后清空Eden区。由于大部分对象都是垃圾，所以MinorGC引起的stop-the-world可以忽略。
 
@@ -208,7 +208,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 **【流程图】**
 
-<img src="https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-162915-9d21e3a701caab933d655f15ebf32eab.jpeg" alt="img" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-162915-9d21e3a701caab933d655f15ebf32eab.jpeg" alt="img" style="zoom:50%;" />
 
 **【内存担保机制】**
 
@@ -228,7 +228,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 最基本、历史最悠久的垃圾收集器。（新生代采用复制算法，老生代采用标志整理算法）。大家看名字就知道这个收集器是一个单线程收集器了。
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163020-bbb0f0b9327f0b82ef0d2b9ff815f955.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163020-bbb0f0b9327f0b82ef0d2b9ff815f955.jpeg)
 
 **【特点】**
 
@@ -240,7 +240,7 @@ JVM并没对如何实现垃圾回收器做出明确规定，因此各个厂商�
 
 Serial 收集器的多线程版本。除了使用多线程外，其余行为和 Serial 收集器完全一样。
 
-![](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163054-0ef9906652dc14d1de5926282b06cfbb.jpeg)
+![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163054-0ef9906652dc14d1de5926282b06cfbb.jpeg)
 
 **【特点】**
 
@@ -252,7 +252,7 @@ Serial 收集器的多线程版本。除了使用多线程外，其余行为和 
 
 作用于新生代的垃圾收集器。提供了很多参数供用户找到最合适的停顿时间或最大吞吐量，也可以交给虚拟机去完成内存管理优化。
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163119-9b8d78862f8966b25595aea72c79721f.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163119-9b8d78862f8966b25595aea72c79721f.jpeg)
 
 **【特点】**
 
@@ -287,7 +287,7 @@ Serial 收集器的多线程版本。除了使用多线程外，其余行为和 
 
 Concurrent Mark Sweep。作用于老年代的垃圾收集器。
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163136-39ac1b2696b6d2682933890c9005bd68.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163136-39ac1b2696b6d2682933890c9005bd68.jpeg)
 
 **【特点】**
 
@@ -323,7 +323,7 @@ Concurrent Mark Sweep。作用于老年代的垃圾收集器。
 
 Garbage First。 主要针对配备多颗处理器及大容量内存的服务器。以极高概率满足 GC 停顿时间要求的同时，还具备高吞吐量性能特征。JDK1.9 中的默认收集器。
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163157-0fd2cb69aa84048c3699d10a5533197c.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163157-0fd2cb69aa84048c3699d10a5533197c.jpeg)
 
 **【特点】**
 
@@ -334,7 +334,7 @@ Garbage First。 主要针对配备多颗处理器及大容量内存的服务器
 
 **【分代规则】**
 
-![img](https://raw.githubusercontent.com/UpUpPeng/AndroidLearningNotes/main/img/20201127-163212-048439d9ac66d179e77dee5e335b9dce.jpeg)
+![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201127-163212-048439d9ac66d179e77dee5e335b9dce.jpeg)
 
 - 将整个内存区域划分为若干（几千）个大小相等的内存区域小块。
 - 每一小块内存区域都有可能是 Eden区、Survivor区、Old区、Humongous区。
