@@ -35,6 +35,7 @@
 - [渲染优化](Android/optimize/渲染优化.md)
 - [内存优化](Android/optimize/内存优化.md)
 - [图片优化](Android/optimize/图片优化.md)
+- [进程保活](Android/optimize/进程保活.md)
 
 ### 官方组件解析
 
