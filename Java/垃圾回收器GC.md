@@ -98,26 +98,26 @@ public static void testGC() {
 
 ### 1.3.1. finalize方法
 
-finalize() 是 Object 的 protected 方法，子类可以覆盖该方法以实现资源清理工作，GC 在回收对象之前会调用该方法。
+`finalize()` 是 Object 的 protected 方法，子类可以覆盖该方法以实现资源清理工作，GC 在回收对象之前会调用该方法。
 
 **【用途】**
 
 - 清理本地对象 (通过 JNI 创建的对象)。
-- 作为确保某些非内存资源(如 Socket、文件等) 释放的一个补充：在 finalize 方法中显式调用其他资源释放方法。
+- 作为确保某些非内存资源(如 Socket、文件等) 释放的一个补充：在 `finalize()` 方法中显式调用其他资源释放方法。
 
 **【特点】**
 
-- System.gc() 与 System.runFinalization() 方法会增加 finalize 方法执行的机会，但不绝对。
-- Java 语言规范不保证 finalize 方法会被执行和被及时地执行。
-- finalize 方法可能会带来性能问题（JVM 通常在单独的低优先级线程中执行 finalize 方法）。
-- 对象再生问题：finalize 方法中，可将待回收对象赋值给 GC Roots 可达的对象引用，从而达到对象再生的目的。
-- finalize 方法至多由 GC 执行一次（用户可以手动调用，但不影响 GC 对 finalize 方法的行为）。
+- `System.gc()` 与 `System.runFinalization()` 方法会增加 `finalize()` 方法执行的机会，但不绝对。
+- Java 语言规范不保证 `finalize()` 方法会被执行和被及时地执行。
+- `finalize()` 方法可能会带来性能问题（JVM 通常在单独的低优先级线程中执行 `finalize()` 方法）。
+- 对象再生问题：`finalize()` 方法中，可将待回收对象赋值给 GC Roots 可达的对象引用，从而达到对象再生的目的。
+- `finalize()` 方法至多由 GC 执行一次（用户可以手动调用，但不影响 GC 对 `finalize()` 方法的行为）。
 
 **【原理】**
 
-1. GC 发生时，如果可回收对象重写了 finalize 方法，则不会立即回收，而是放到 FinalizerQueue 中，反之则直接回收。
-2. 专门的 FinalizerThread 会从 FinalizerQueue 取出 finalizer，并执行 finalize 方法。
-3. 下一次 GC 发生时，如果该对象与 GCRoots 存在引用链，则不会回收，否则不会再执行 finalize 方法，而是直接回收。
+1. GC 发生时，如果可回收对象重写了 `finalize()` 方法，则不会立即回收，而是放到 FinalizerQueue 中，反之则直接回收。
+2. 专门的 FinalizerThread 会从 FinalizerQueue 取出 finalizer，并执行 `finalize()` 方法。
+3. 下一次 GC 发生时，如果该对象与 GCRoots 存在引用链，则不会回收，否则不会再执行 `finalize()` 方法，而是直接回收。
 
 ### 1.3.2. 对象复活
 
@@ -376,7 +376,7 @@ Object object = new Object();
 String str = "StrongReference";
 ```
 
-对象具有强引用，内存不足时**不会被回收**，虚拟机抛出OutOfMemoryError。
+对象具有强引用，内存不足时**不会被回收**，虚拟机抛出`OutOfMemoryError`。
 
 ```java
 public class Main {
@@ -397,9 +397,9 @@ Exception in thread "main" java.lang.OutOfMemoryError: Requested array size exce
 
 ## 2.2. 软引用
 
-使用SoftReference来表示一些有用但不是必需的对象，在**GC后内存还不足时回收**。适合用来实现缓存，如网页缓存、图片缓存。
+使用 `SoftReference` 来表示一些有用但不是必需的对象，在**GC后内存还不足时回收**。适合用来实现缓存，如网页缓存、图片缓存。
 
-可以和引用队列（ReferenceQueue）结合使用，软引用对象被回收时，虚拟机会把这个软引用加入到引用队列中。
+可以和引用队列（`ReferenceQueue`）结合使用，软引用对象被回收时，虚拟机会把这个软引用加入到引用队列中。
 
 ```java
 Object obj = new Object();
@@ -412,7 +412,7 @@ System.out.println(sr.get() != null);   // true。内存充足时，GC过后也�
 
 ## 2.3. 弱引用
 
-使用WeakReference来表示一些可有可无的对象，在**GC时无论内存是否充足都回收**。也可以和引用队列（ReferenceQueue）结合使用。
+使用 `WeakReference` 来表示一些可有可无的对象，在**GC时无论内存是否充足都回收**。也可以和引用队列（`ReferenceQueue`）结合使用。
 
 相比软引用，弱引用具有更短的生命周期，不过GC的线程优先级很低，所以并不一定会很快发现弱引用并回收他们。
 
@@ -429,7 +429,7 @@ System.out.println(wr.get() != null);   // false。GC过后就会被回收掉
 
 ## 2.4. 虚引用
 
-使用PhantomReference来表示一些形同虚设的引用对象，在**任何时候都可能回收**。主要用来跟踪对象被垃圾回收的活动。必须和引用队列（ReferenceQueue）结合使用。
+使用 `PhantomReference` 来表示一些形同虚设的引用对象，在**任何时候都可能回收**。主要用来跟踪对象被垃圾回收的活动。必须和引用队列（`ReferenceQueue`）结合使用。
 
 ```java
 Object obj = new Object();

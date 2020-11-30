@@ -28,7 +28,7 @@ JVM 采用 CPU 时间片轮转算法来调度多线程。当被挂起的线程�
 
 - 占用的内存空间较小。
 - 线程隔离性，每个线程都有独立程序计数器。
-- JVM 规范中唯一没有规定 OutOfMemoryError 情况的区域。
+- JVM 规范中唯一没有规定 `OutOfMemoryError` 情况的区域。
 - 执行 java 方法时，程序计数器是有值的，且记录的是正在执行的字节码指令的地址。
 - 执行 native 本地方法时，程序计数器的值为空（Undefined）。因为 native 方法是 java 通过 JNI 直接调用本地 C/C++ 库，由于该方法是通过 C/C++ 实现，无法产生相应的字节码，并且 C/C++ 执行时的内存分配是由自己语言决定的，而不是由 JVM 决定的。
 
@@ -62,7 +62,7 @@ JVM 采用 CPU 时间片轮转算法来调度多线程。当被挂起的线程�
 
 - 本地方法栈是一个后入先出栈。
 - 由于是线程私有的，生命周期随着线程，线程启动而产生，线程结束而消亡。
-- 本地方法栈会抛出 StackOverflowError 和 OutOfMemoryError 异常。
+- 本地方法栈会抛出 `StackOverflowError` 和 `OutOfMemoryError` 异常。
 
 ## 1.4. 堆
 
@@ -71,7 +71,7 @@ JVM 采用 CPU 时间片轮转算法来调度多线程。当被挂起的线程�
 - 从内存分配的角度看，线程共享的 Java 堆中可能划分出多个线程私有的线程本地分配缓存区（Thread Local Allocation Buffer，TLAB）。
 - JVM 规范规定，Java 堆可以物理不连续，只要逻辑连续即可。既可以是固定大小，也可以是可扩展大小，主流虚拟机都是按照可扩展实现。
 
-- 如果是可扩展大小，如果尝试扩展时无法申请到足够的内存，那 JVM 将抛出 OutOfMemoryError 异常。
+- 如果是可扩展大小，如果尝试扩展时无法申请到足够的内存，那 JVM 将抛出 `OutOfMemoryError` 异常。
 
 ### 1.4.1. 逃逸分析
 
@@ -115,7 +115,7 @@ public void noEscape() {
 
 **【标量】**
 
-一个数据无法再分解为更小的数据来表示了，Java 虚拟机中的基本数据类型 byte、short、int、long、boolean、char、float、double 以及 reference 类型等，都不能再进一步分解了，这些就可以称为标量。
+一个数据无法再分解为更小的数据来表示了，Java 虚拟机中的基本数据类型 `byte`、`short`、`int`、`long`、`boolean`、`char`、`float`、`double` 以及 `reference` 类型等，都不能再进一步分解了，这些就可以称为标量。
 
 **【聚合量】**
 
@@ -200,5 +200,5 @@ JVM 规范把方法区描述为堆的一个逻辑部分，但它有一个别名 
 - 方法区与 Java 堆一样，是所有线程共享的内存区域。
 
 - DK7 之前（永久代）用于存放已经被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。
-- 运行时常量池是方法区的一部分。Class 文件中除了有类的版本 / 字段 / 方法 / 接口等描述信息外，还有一项信息是常量池，用于存放编译期生成的各种字面量和符号引用，这部分内容将类在加载后进入方法区的运行时常量池中存放。运行期间也可能将新的常量放入池中，这种特性被开发人员利用得比较多的是 [String.intern()](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html) 方法。受方法区内存的限制，当常量池无法再申请到内存时会抛出 OutOfMemoryError 异常。
-- Java 中包装类 Byte、Short、Integer、Long、Character、Boolean 都实现了常量池技术， Float 和 Double 则没有实现。 Byte、Short、Integer、Long、Character 这 5 种整型的包装类也只是在对应值在 - 128 到 127 之间时才可使用对象池。
+- 运行时常量池是方法区的一部分。Class 文件中除了有类的版本 / 字段 / 方法 / 接口等描述信息外，还有一项信息是常量池，用于存放编译期生成的各种字面量和符号引用，这部分内容将类在加载后进入方法区的运行时常量池中存放。运行期间也可能将新的常量放入池中，这种特性被开发人员利用得比较多的是 [`String.intern()`](https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html) 方法。受方法区内存的限制，当常量池无法再申请到内存时会抛出 `OutOfMemoryError` 异常。
+- Java 中包装类 `Byte`、`Short`、`Integer`、`Long`、`Character`、`Boolean` 都实现了常量池技术， `Float` 和 `Double` 则没有实现。 `Byte`、`Short`、`Integer`、`Long`、`Character` 这 5 种整型的包装类也只是在对应值在 `-128~127` 之间时才可使用对象池。

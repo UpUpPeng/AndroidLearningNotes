@@ -50,8 +50,8 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 **【流程步骤】**
 
 1. 发送进程将要发送的数据存放在内存缓存区中，通过系统调用进入内核态。
-2. 内核程序在内核空间开辟一块内核缓存区，调用 copy_from_user() 函数将数据从用户空间的内存缓存区拷贝到内核空间的内核缓存区中。
-3. 接收进程在接收数据时在自己的用户空间开辟一块内存缓存区，然后内核程序调用 copy_to_user() 函数将数据从内核缓存区拷贝到接收进程的内存缓存区。
+2. 内核程序在内核空间开辟一块内核缓存区，调用 `copy_from_user()` 函数将数据从用户空间的内存缓存区拷贝到内核空间的内核缓存区中。
+3. 接收进程在接收数据时在自己的用户空间开辟一块内存缓存区，然后内核程序调用 `copy_to_user()` 函数将数据从内核缓存区拷贝到接收进程的内存缓存区。
 
 **【缺点】**
 
@@ -90,7 +90,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 1. Binder 驱动在内核空间创建一个数据接收缓存区。
 2. 建立内核缓存区和数据接收缓存区的映射关系，以及数据接收缓存区和接收进程用户空间地址的映射关系。
-3. 发送方进程通过系统调用 copy_from_user() 将数据 copy 到内核缓存区。
+3. 发送方进程通过系统调用 `copy_from_user()` 将数据 copy 到内核缓存区。
 4. 由于内核缓存区&接收进程的用户空间地址存在映射关系（同时映射 Binder 创建的接收缓存区中），故相当于也发送到了接收进程的用户空间地址，即实现了跨进程通信。
 
 ------
@@ -106,7 +106,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 **【关系】**
 
 - Client、Server、Service Manager 运行在用户空间，Binder 驱动运行在内核空间。
-- Client、Server、ServiceManager 通过系统调用 open、mmap 和 ioctl 来访问设备文件 /dev/binder 来间接的实现跨进程通信。
+- Client、Server、ServiceManager 通过系统调用 `open`、`mmap` 和 `ioctl` 来访问设备文件 /dev/binder 来间接的实现跨进程通信。
 - Service Manager 、Binder 驱动由系统提供，Client、Server 由应用程序实现。
 
 **【作用】**
@@ -121,7 +121,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 **1. 系统创建ServiceManager：**
 
-ServiceManager 进程要想成为 ServiceManager ，就必须先通过 Binder 驱动向系统注册，但是此时整个 IPC 机制还没建立，因此 ServiceManager 进程会使用 BINDER_SET_CONTEXT_MGR 命令，Binder 驱动就会自动为它创建 Binder 实体（ 0 号引用），以后的 Server 进程必须通过这个 0 号引用和 ServiceManager 的 Binder 通信。
+ServiceManager 进程要想成为 ServiceManager ，就必须先通过 Binder 驱动向系统注册，但是此时整个 IPC 机制还没建立，因此 ServiceManager 进程会使用 `BINDER_SET_CONTEXT_MGR` 命令，Binder 驱动就会自动为它创建 Binder 实体（ 0 号引用），以后的 Server 进程必须通过这个 0 号引用和 ServiceManager 的 Binder 通信。
 
 **2. 注册 Server 进程：**
 
@@ -133,7 +133,7 @@ Client 进程通过 Server 进程的名字，在 Binder 驱动的帮助下从 Se
 
 **4. 数据通信：**
 
-Server 进程通过系统调用 copy_from_user() 将数据 copy 到内核缓存区，Client 进程通过两层内存映射，可以直接使用内核缓存区中的数据。
+Server 进程通过系统调用 `copy_from_user()` 将数据 copy 到内核缓存区，Client 进程通过两层内存映射，可以直接使用内核缓存区中的数据。
 
 ---
 

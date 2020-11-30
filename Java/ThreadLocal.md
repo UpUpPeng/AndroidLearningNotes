@@ -79,7 +79,7 @@ new Thread("Thread #2") {
 }.start();
 ```
 
-从 ThreadLocal 的 set 和 get 方法可以看出，他们所操作的对象都是当前线程的 localValues 对象和 table 数组，因此在不同线程中访问同一个 ThreadLocal 的 set 和 get 方法，它们对 ThreadLocal 所做的读写操作仅限于各自内部，这就是为什么 ThreadLocal 可以在多个线程找那个互不干扰的存储和修改数据。
+从 ThreadLocal 的 `set()` 和 `get()` 方法可以看出，他们所操作的对象都是当前线程的 localValues 对象和 table 数组，因此在不同线程中访问同一个 ThreadLocal 的 `set()` 和 `get()` 方法，它们对 ThreadLocal 所做的读写操作仅限于各自内部，这就是为什么 ThreadLocal 可以在多个线程找那个互不干扰的存储和修改数据。
 
 ---
 
@@ -111,7 +111,7 @@ new Thread("Thread #2") {
 
 ## 2.2. ThreadLocal 核心方法源码
 
-| **方法声明**               | **描述**                     |
+| **方法声明**                | **描述**                     |
 | -------------------------- | ---------------------------- |
 | protected T initialValue() | 返回当前线程局部变量的初始值 |
 | public void set(T value)   | 设置当前线程绑定的局部变量   |
@@ -152,7 +152,7 @@ void createMap(Thread t, T firstValue) {
 
 ### 2.2.2. get 方法
 
-先获取当前线程的 ThreadLocalMap 变量，如果存在则返回值，不存在则创建并返回初始值 null。
+先获取当前线程的 ThreadLocalMap 变量，如果存在则返回值，不存在则创建并返回初始值 `null`。
 
 ```java
 // 获取当前线程绑定的局部变量
@@ -328,9 +328,9 @@ private static int nextHashCode() {
 
 **【& (INITIAL_CAPACITY - 1)】**
 
-计算 hash 时，采用 hashCode & (size - 1) 的算法，是取模运算 hashCode % size 的高效实现。
+计算 hash 时，采用 `hashCode & (size - 1)` 的算法，是取模运算 `hashCode % size` 的高效实现。
 
-正因为这种算法，要求 size 必须是2的整次幂，保证在索引不越界的前提下，使得hash发生冲突的次数减小。
+正因为这种算法，要求 `size` 必须是2的整次幂，保证在索引不越界的前提下，使得 hash 发生冲突的次数减小。
 
 ### 3.3.2. ThreadLocalMap 的 set 方法
 
@@ -377,17 +377,17 @@ private static int nextIndex(int i, int len) {
 
 **【执行流程】**
 
-1. 根据key计算出索引i，然后查找i位置上的Entry。
-2. 如果Entry存在并且key等于传入的key，则直接给这个Entry赋新的value值。
-3. 如果Entry存在但是key等于null，则调用replaceStaleEntry来更换这个key为null的Entry。
-4. 循环检测，直到遇到为null的地方，此时如果循环还没有return，就在这个null的位置新建一个Entry，并且插入，同时size增加1。
-5. 最后调用cleanSomeSlots，清理key为null的Entry。
-6. 返回是否清理了Entry，接下来再判断size是否达到了rehash的条件（size>=thresgold），达到的话就会调用rehash函数执行一次全表的扫描清理。
+1. 根据`key`计算出索引`i`，然后查找`i`位置上的Entry。
+2. 如果Entry存在并且`key`等于传入的`key`，则直接给这个Entry赋新的`value`值。
+3. 如果Entry存在但是`key`等于`null`，则调用`replaceStaleEntry`来更换这个`key`为`null`的Entry。
+4. 循环检测，直到遇到为`null`的地方，此时如果循环还没有`return`，就在这个`null`的位置新建一个Entry，并且插入，同时`size`增加1。
+5. 最后调用`cleanSomeSlots`，清理`key`为`null`的Entry。
+6. 返回是否清理了Entry，接下来再判断`size`是否达到了`rehash`的条件（size≥thresgold），达到的话就会调用`rehash`函数执行一次全表的扫描清理。
 
 **【线性探测法】**
 
 用来解决哈希冲突。
 
 - 依次探测下一个地址，直到有空的地址后插入，若整个空间都找不到空余的地址，则产生溢出。
-- 举例，假设当前table长度为16，计算出来key的hash值为14，如果table[14]上已经有值，且其key与当前key不一致，那么就发生了hash冲突，这时将14加1得到15，取table[15]进行判断，如果还冲突会回到0，取table[0]，以此类推直到可以插入为止。
-- 按照上面的描述，可以把Entry[] table看成一个环形数组。
+- 举例，假设当前table长度为16，计算出来key的hash值为14，如果`table[14]`上已经有值，且其key与当前key不一致，那么就发生了hash冲突，这时将14加1得到15，取`table[15]`进行判断，如果还冲突会回到0，取table[0]，以此类推直到可以插入为止。
+- 按照上面的描述，可以把`Entry[] table`看成一个环形数组。
