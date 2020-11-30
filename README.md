@@ -34,6 +34,7 @@
 - [启动优化](Android/optimize/启动优化.md)
 - [渲染优化](Android/optimize/渲染优化.md)
 - [内存优化](Android/optimize/内存优化.md)
+- [图片优化](Android/optimize/图片优化.md)
 
 ### 官方组件解析
 
