@@ -15,7 +15,7 @@
 - [Java 内存模型](Java/Java内存模型.md)
 - [JVM 内存模型](Java/JVM内存模型.md)
 - [垃圾回收器 GC](Java/垃圾回收器GC.md)
-- [类的加载](Java/类的加载.md)
+- [Java类加载器](Java/Java类加载器.md)
 - [4种常量池](Java/4种常量池.md)
 - [ThreadLocal](Java/ThreadLocal.md)
   
