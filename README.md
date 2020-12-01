@@ -8,18 +8,19 @@
 
 ---
 
-</br>
+<br/>
 
 ## Java系列
 
 - [Java 内存模型](Java/Java内存模型.md)
 - [JVM 内存模型](Java/JVM内存模型.md)
 - [垃圾回收器 GC](Java/垃圾回收器GC.md)
-- [Java类加载器](Java/Java类加载器.md)
+- [Java 类加载器](Java/Java类加载器.md)
+- [Java 泛型](Java/Java泛型.md)
 - [4种常量池](Java/4种常量池.md)
 - [ThreadLocal](Java/ThreadLocal.md)
   
-</br>
+<br/>
 
 ## Android系列
 
