@@ -22,7 +22,7 @@
 
 ## 1.1. 基本原理
 
-![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-112910-3fc5f029675e956ef5cac8d9aaf14fc0.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-112910-3fc5f029675e956ef5cac8d9aaf14fc0.png)
 
 【**进程隔离**】
 
@@ -48,7 +48,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 ## 1.2. 管道和消息队列的原理
 
-![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-113153-004b7ff937dd39a0824b564225d10c5e.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-113153-004b7ff937dd39a0824b564225d10c5e.png)
 
 **【流程步骤】**
 
@@ -89,7 +89,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 ## 2.4. Binder 数据流转原理
 
-![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-113348-8491d03e4d0e049a6921ca01e90d7c4c.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-113348-8491d03e4d0e049a6921ca01e90d7c4c.png)
 
 1. Binder 驱动在内核空间创建一个数据接收缓存区。
 2. 建立内核缓存区和数据接收缓存区的映射关系，以及数据接收缓存区和接收进程用户空间地址的映射关系。
@@ -121,7 +121,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 ## 3.1. Client / Server / ServiceManager / Binder Dirver
 
-![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-113553-5e4725e75b7b00d52b73fd6d8e2c5bcd.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-113553-5e4725e75b7b00d52b73fd6d8e2c5bcd.png)
 
 **【关系】**
 
@@ -137,7 +137,7 @@ copy_to_user()   // 将数据从内核空间拷贝到用户空间
 
 ## 3.2. Binder 通信过程
 
-![](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-113938-78cca8812b7022a99b359bb334783dca.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-113938-78cca8812b7022a99b359bb334783dca.png)
 
 **1. 系统创建ServiceManager：**
 
@@ -159,6 +159,6 @@ Server 进程通过系统调用 `copy_from_user()` 将数据 copy 到内核缓�
 
 # 4. Binder 原理步骤
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-114028-93aae46f68347846f1cf2ee2b1d107f3.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-114028-93aae46f68347846f1cf2ee2b1d107f3.png)
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201129-114041-fbf2b12da0d2b1ab5291ed73cf6a823f.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201129-114041-fbf2b12da0d2b1ab5291ed73cf6a823f.png)

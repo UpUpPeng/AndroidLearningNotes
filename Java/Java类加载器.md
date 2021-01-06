@@ -38,7 +38,7 @@
 
 Java 类加载分为 5 个过程，分别为：加载，连接 (验证，准备，解析)，初始化，使用，卸载。
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-210000-14084d0d8220cda2ebd55d8bb60c4be6.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-210000-14084d0d8220cda2ebd55d8bb60c4be6.png)
 
 - 绑定/晚期绑定）。
 - 这些阶段按顺序开始，但不是按顺序进行或顺序完成，通常是交叉进行的（一个阶段执行中激活另外一个阶段）。
@@ -251,7 +251,7 @@ public class InitTest {
 
 ## 2.1. 类加载器的分类
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-210412-0637b7585d45400fadcd4a6c30e8a00a.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-210412-0637b7585d45400fadcd4a6c30e8a00a.png)
 
 ### 2.1.1. 引导类加载器（bootstrap class loader）
 
@@ -301,7 +301,7 @@ public class InitTest {
 
 ## 2.4. 双亲委派
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-210516-934640a357f1c5ce0a48fd0236d4dfdb.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-210516-934640a357f1c5ce0a48fd0236d4dfdb.png)
 
 ### 2.4.1. 执行流程
 

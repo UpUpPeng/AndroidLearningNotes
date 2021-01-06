@@ -91,7 +91,7 @@ new Thread("Thread #2") {
 
 每个 ThreadLocal 都创建一个 ThreadLocalMap，用 Thread 作为 Map 的key，要存储的局部变量作为 Map 的 value。
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-211844-3331972f136736421ffe0bb709f5ec13.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-211844-3331972f136736421ffe0bb709f5ec13.png)
 
 ### 2.1.2. JAVA 8 方案
 
@@ -102,7 +102,7 @@ new Thread("Thread #2") {
 - Thread 内部的 Map 是由 ThreadLocal 维护的，由 ThreadLocal 负责向 map 获取和设置线程的变量值。
 - 对于不同的线程，每次获取副本值时，别的线程并不能获取到当前线程的副本值，形成了副本的隔离，互不干扰。
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-211905-ef79582085e6800d00aa1c3be89b075b.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-211905-ef79582085e6800d00aa1c3be89b075b.png)
 
 **【优点】**
 
@@ -225,7 +225,7 @@ ThreadLocalMap 是 ThreadLocal 的静态内部类，并没有实现 Map 接口�
 
 ## 3.1. ThreadLocalMap 类的基本结构
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-212112-18fc8ee5e58f6156ecdc97306f645fec.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-212112-18fc8ee5e58f6156ecdc97306f645fec.png)
 
 ### 3.1.1. 成员变量
 
@@ -264,7 +264,7 @@ static class Entry extends WeakReference<ThreadLocal<?>> {
 
 ThreadLocalMap 中的 key 使用了强引用，会导致 threadLocal 和 value 出现内存泄漏。
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-212213-b57d492102f19a517fffcd6d93d43d90.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-212213-b57d492102f19a517fffcd6d93d43d90.png)
 
 - 假设在业务代码中使完 ThreadLocal，threadLocalRef被回收了。
 
@@ -275,7 +275,7 @@ ThreadLocalMap 中的 key 使用了强引用，会导致 threadLocal 和 value �
 
 ThreadLocalMap 中的 key 使用了弱引用，会导致 value 出现内存泄漏。
 
-![img](https://raw.githubusercontent.com/ren-p/AndroidLearningNotes/main/img/20201128-212232-45299201875de58bb0a90772e3226652.png)
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201128-212232-45299201875de58bb0a90772e3226652.png)
 
 - 假设在业务代码中使完 ThreadLocal，threadLocalRef被回收了。
 - 由于 ThreadLocalMap 只持有 ThreadLocal 的弱引用，没有任何强引用指向 threadlocal 实例，所以 threadlocal 就可以顺利被gc回收，此时 Entry 中的 key=null。
