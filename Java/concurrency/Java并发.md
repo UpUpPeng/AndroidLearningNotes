@@ -614,7 +614,7 @@ putstatic	i 	// 将修改后的值存入静态变量i
 
 如果在执行指令的同时，发生了**上下文切换**，则可能一次自增和自减后 `i!=0`。
 
-```
+```mermaid
 sequenceDiagram
 	participant 线程1
 	participant 线程2
@@ -670,7 +670,7 @@ public class ThreadTest {
 
 对关键操作加上 `synchronized` 后结果就会正确 `count = 0` 。
 
-```
+```mermaid
 sequenceDiagram
 	participant 线程1
 	participant 线程2
@@ -823,15 +823,15 @@ public static void test() {
 |-----------------------------------------------------------|--------------------|
 |                      Mark Word (32 bits)                  |       State        |
 |-----------------------------------------------------------|--------------------|
-| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2(01) |       Normal       |无锁
+| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2(01) |       Normal       | 无锁
 |-----------------------------------------------------------|--------------------|
-|  thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2(01) |       Biased       |偏向锁
+|  thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2(01) |       Biased       | 偏向锁
 |-----------------------------------------------------------|--------------------|
-|               ptr_to_lock_record:30          | lock:2(00) | Lightweight Locked |轻量级锁
+|               ptr_to_lock_record:30          | lock:2(00) | Lightweight Locked | 轻量级锁
 |-----------------------------------------------------------|--------------------|
-|               ptr_to_heavyweight_monitor:30  | lock:2(10) | Heavyweight Locked |重量级锁
+|               ptr_to_heavyweight_monitor:30  | lock:2(10) | Heavyweight Locked | 重量级锁
 |-----------------------------------------------------------|--------------------|
-|                                              | lock:2(11) |    Marked for GC   |GC标记
+|                                              | lock:2(11) |    Marked for GC   | GC标记
 |-----------------------------------------------------------|--------------------|
 ```
 
@@ -853,7 +853,7 @@ Monitor 被翻译为**监视器**或**管程**。管程提供了一种机制，�
 
 **Monitor 的组成和运行：**
 
-```
+``` mermaid
 sequenceDiagram
 	participant WaitSet
 	participant EntryList
