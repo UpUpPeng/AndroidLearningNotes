@@ -614,7 +614,7 @@ putstatic	i 	// 将修改后的值存入静态变量i
 
 如果在执行指令的同时，发生了**上下文切换**，则可能一次自增和自减后 `i!=0`。
 
-```mermaid
+```
 sequenceDiagram
 	participant 线程1
 	participant 线程2
@@ -670,7 +670,7 @@ public class ThreadTest {
 
 对关键操作加上 `synchronized` 后结果就会正确 `count = 0` 。
 
-```mermaid
+```
 sequenceDiagram
 	participant 线程1
 	participant 线程2
@@ -853,7 +853,7 @@ Monitor 被翻译为**监视器**或**管程**。管程提供了一种机制，�
 
 **Monitor 的组成和运行：**
 
-``` mermaid
+```
 sequenceDiagram
 	participant WaitSet
 	participant EntryList
