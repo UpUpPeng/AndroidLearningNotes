@@ -637,7 +637,7 @@ sequenceDiagram
     Note over static i : 在两个线程自增和自减后，i!=0
 ```
 
-## synchronized
+## synchronized 概念
 
 用来给某个目标（对象，方法等）**加锁**，相当于不管哪一个线程运行到这个行时，都必须**先检查**有没有其它线程正在用这个目标，如果有就要**等待**正在使用的线程运行完后**释放**该锁，没有的话则对该目标**先加锁**后**再运行**。
 
@@ -677,7 +677,7 @@ sequenceDiagram
 	participant static i
 	participant 锁对象
 
-    Note over static i : 在两个线程执行前，初始值 i=0
+    Note over static i : 在两个线程执行前，i=0
     线程2 ->> 锁对象 : synchronized【尝试获取🔐，获取成功✅】
     Note over 线程2,锁对象 : 线程2加锁🔐
     static i ->> 线程2 : getstatic i【读取到 i=0】
@@ -851,7 +851,7 @@ Monitor 被翻译为**监视器**或**管程**。管程提供了一种机制，�
 
 每个 Java 对象都可以关联一个 **Monitor 对象**，如果使用 `synchronized` 给对象上锁（重量级）之后，该对象头的 Mark Word 中就被设置指向 Monitor 对象的指针。
 
-**Monitor 的组成和运行：**
+**【Monitor 的组成和运行】**
 
 ``` mermaid
 sequenceDiagram
@@ -876,4 +876,177 @@ sequenceDiagram
 
 - `synchronized` 必须是进入同一个对象的 monitor 才有上述的效果。
 - 不加 `synchronized` 的对象不会关联监视器，不遵从以上规则。
+
+## synchronized 原理
+
+锁的状态总共有四种：**无锁**、**偏向锁**、**轻量级锁**和**重量级锁**。随着锁的竞争，锁可以从偏向锁升级到轻量级锁，再升级的重量级锁（但是只升不降）。
+
+### 轻量级锁
+
+**使用场景：**如果一个对象虽然有多线程访问，但多线程访问的时间是错开的（即没有竞争），那么可以使用轻量级锁来优化。
+
+```java
+private static final Object obj = new Object();
+
+public static void method1(){
+    synchronized (obj){	// ①
+        method2();		
+    }					// ④
+}
+
+private static void method2() {
+    synchronized (obj){	// ②
+        
+    }					// ③
+}
+```
+
+**【加锁和解锁流程】**默认是主线程调用 `method1()` 方法
+
+1. **method1() 尝试对锁对象加锁：**
+   
+- 虚拟机在当前线程（Main Thread）的栈帧中建立一个**锁记录**（Lock Record）的空间，包含`锁记录自身的地址`和`指向锁对象的指针`。
+  
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-151221-22f88a41e3f08434a7dfeef3657d3b94.png" style="zoom: 50%;" />
+
+   - 尝试用 CAS 把`锁记录自身的地址`和`锁对象的Mark Word`进行交换，由于锁对象的状态为无锁（01），因此交换成功后状态将变为轻量级锁（00）。
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-151313-98dfa5d746c8349683761a504a1ca800.png" style="zoom:50%;" />
+
+2. **method2() 尝试对锁对象加锁：** 但由于锁对象的状态为为轻量级锁（00）且锁对象的 Mark Word 指向当前线程（Main Thread）。因此执行锁重入，则新增一条锁记录作为重入的计数。
+
+   <img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-153339-ebe794357528ef26d3278fef40d1da81.png" style="zoom:50%;" />
+
+3. **method2() 尝试对锁对象解锁：** 锁记录的地址为 `NULL` ，表示有重入，只需要移除锁记录，从而使重入计数减1。
+
+   <img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-151313-98dfa5d746c8349683761a504a1ca800.png" style="zoom:50%;" />
+
+4. **method1() 尝试对锁对象解锁：** 锁记录的地址不为 `NULL` ，尝试用 CAS 把`锁对象的Mark Word`恢复为对象头。因此交换成功后状态将变为无锁（01）。
+
+### 重量级锁
+
+如果在尝试加轻量级锁的过程中，CAS 操作无法成功，如果有其它线程为此对象加上了轻量级锁（有竞争），就要进行**锁膨胀**，将轻量级锁变为**重量级锁**。
+
+```java
+private static final Object obj = new Object();
+
+public static void method(){
+    synchronized (obj){	// ①
+
+    }					// ②
+}
+```
+
+**【加锁和解锁流程】**主线程和其他线程都调用 `method()` 方法
+
+1. **其他线程（Other Thread）尝试对锁对象加轻量级锁：** 由于主线程（Main Thread）已经对该对象加了轻量级锁，因此会加锁失败。
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-155223-a007e7cee122840cd81c57bc49209dca.png" style="zoom:50%;" />
+
+于是**进入锁膨胀**流程：
+
+   - 为锁对象申请 Monitor 锁。
+   - 将锁对象的 Mark Word 指向当前 Monitor ，并把状态置为重量级锁（10）。
+   - Monitor 的 Owner 则指向
+   - 其他线程进入 Monitor 的 EntryList 中并变为 BLOCKED 状态。
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-160524-a3c7f3a1bf80eeb8a9e3bb68d04c6172.png" style="zoom:50%;" />
+
+2. **主线程（Main Thread）尝试对锁对象解轻量级锁：** 尝试用 CAS 把`锁对象的Mark Word`恢复为对象头，失败。于是进入重量级解锁流程，即按照 Monitor 地址找到 Monitor 对象，设置 Owner 为 `null`，唤醒 EntryList 中 BLOCKED 线程，并把主线程的锁记录转移至其他线程。
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210108-162211-4c7ef5729e4fae4d97818c965d383b5b.png" style="zoom:50%;" />
+
+### 偏向锁
+
+轻量级锁在没有竞争时（只有一个线程），每次重入仍然需要执行CAS操作。
+
+Java 6 中引入了**偏向锁**来做进一步优化：只有第一次使用 CAS 将线程ID设置到对象的Mark Word头，之后发现这个线程ID是自己的就表示没有竞争，不用重新CAS。以后只要不发生竞争，这个对象就归该线程所有。
+
+**【对象创建时】**
+
+- 如果启用偏向锁（默认开启）：对象创建后，Mark Word 值为0x05（即最后3位为101），且 thread、epoch、age 都为0。
+```java
+public static void main(String[] args){
+    Object obj = new Object();	// 默认添加了偏向锁，但是thread为0，不关联任何线程
+    // obj.hashCode();				// 如果执行，则偏向锁会被去掉，Mark Word后3位为001，hashcode有值，等效于禁用偏向锁
+    synchronized (obj){			// 保持偏向锁，thread有值，关联当前线程
+    }							// 保持偏向锁，thread有值，关联当前线程（始终偏向当前线程）
+}
+```
+- 如果禁用偏向锁：对象创建后，Mark Word 值为0x01（即最后3位为001），且 hashcode（第一次使用时才赋值）、age 都为0。
+
+```java
+public static void main(String[] args){
+    Object obj = new Object();	// 无锁状态
+    synchronized (obj){			// 添加轻量级锁
+    }							// 无锁状态（释放掉轻量级锁）
+}
+```
+
+**【偏向锁的撤销】**
+
+- **hashCode()：** 调用了对象的 `hashCode()`，但偏向锁的对象 MarkWord 中存储的是线程id，如果调用 `hashCode()` 会导致偏向锁被撤销：
+  - 轻量级锁会在锁记录中记录 hashCode。
+  - 重量级锁会在 Monitor 中记录 hashCode。
+- **其他线程抢占：** 当有其它线程使用偏向锁对象时，会将偏向锁升级：
+  - 如果持锁线程**未执行完**同步代码块：偏向锁 --> 重量级锁。
+  - 如果持锁线程**已执行完**同步代码块：偏向锁 --> 轻量级锁。
+- **wait()/notify()：** 调用了对象的 `wait()`或`notify()`方法时，由于只有重量级锁才有效，所以偏向锁 --> 重量级锁。
+
+**【批量重偏向与批量撤销】**
+
+- **批量重偏向：** 如果对象虽然被多个线程访问，但没有竞争，这时偏向了线程T1的对象仍有机会重新偏向T2，重偏向会重
+  置对象的Thread ID。当撤销偏向锁阈值超过20次后，jvm会在给这些对象加锁时重新偏向至加锁线程。
+- **批量撤销：** 当撤销偏向锁阈值超过40次后，jvm 会把整个类的所有对象都变为不可偏向的，新建的对象也是不可偏向的。
+
+### 自旋优化
+
+重量级锁竞争的时候，还可以使用自旋来进行优化，如果当前线程自旋成功（即这时候持锁线程已经退出了同步块，释放了锁），这时当前线程就可以避免阻塞（从而避免上下文切换）。如果自旋超时，则会自旋失败，当前线程就会进入阻塞状态。
+
+```mermaid
+sequenceDiagram
+	participant 线程1 as 线程1（CPU1）
+	participant 锁对象
+	participant 线程2 as 线程2（CPU2）
+
+    线程1 ->> 锁对象 : synchronized【尝试获取🔐，获取成功✅】
+    Note over 线程1,锁对象 : 线程1加锁🔐
+    Note over 线程1 : 执行同步代码块
+    线程2 ->> 锁对象 : synchronized【尝试获取🔐，获取失败❎】
+    线程2 ->> 线程2 : 自旋重试
+    Note over 线程1 : 执行完毕
+    Note over 线程1,锁对象 : 线程1解锁🔐
+    线程2 ->> 锁对象 : 自旋成功【获取成功✅】
+    Note over 线程2,锁对象 : 线程2加锁🔐
+```
+
+⭐️ **注意**：
+
+- 自旋会占用CPU时间，单核CPU自旋就是浪费，多核CPU自旋才能发挥优势。
+- Java 6之后自旋锁是自适应的，比如对象刚刚的一次自旋操作成功过，那么认为这次自旋成功的可能性会高，就多自旋几次；反之，就少自旋甚至不自旋。
+
+- Java 7之后不能控制是否开启自旋功能。
+
+### 同步消除
+
+如果能确定一个对象不会出现线程逃逸，对这个变量的同步措施就可以消除掉。单线程中是没有锁竞争。（即锁和锁块内的对象不会逃逸出线程，就可以把这个同步块取消）
+
+```java
+public static void alloc() {
+    byte[] b = new byte[2];
+    // 不会线程逃逸，所以该同步锁可以去掉
+    // 开启使用同步消除执行时间 10 ms左右
+    // 关闭使用同步消除执行时间 3870 ms左右
+    synchronized (b) {
+         b[0] = 1;
+    }
+}
+
+public static void main(String[] args) {
+    for (int i = 0; i < 100000000; i++) {
+         alloc();
+    }
+}
+```
 
