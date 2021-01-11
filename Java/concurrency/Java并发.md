@@ -678,25 +678,25 @@ sequenceDiagram
 	participant 锁对象
 
     Note over static i : 在两个线程执行前，i=0
-    线程2 ->> 锁对象 : synchronized【尝试获取🔐，获取成功✅】
-    Note over 线程2,锁对象 : 线程2加锁🔐
+    线程2 ->> 锁对象 : synchronized【尝试获取锁】
+    Note over 线程2,锁对象 : 线程2拥有锁
     static i ->> 线程2 : getstatic i【读取到 i=0】
     线程2 ->> 线程2 : iconst_1【准备常数 1】
     线程2 ->> 线程2 : isub【自减，线程内 i=-1】
     线程2 -->> 线程1 : 上下文切换
-    线程1 ->> 锁对象 : synchronized【尝试获取🔐，获取失败❎】
+    线程1 -x 锁对象 : synchronized【尝试获取锁】
     Note over 线程1 : 线程1被阻塞【BLOCKED】
     线程1 -->> 线程2 : 上下文切换
     线程2 ->> static i : putstatic i【写入 i=-1】
     Note over static i : 线程2赋值，i=-1
-    线程2 ->> 锁对象 : synchronized【释放🔐，并唤醒被阻塞的线程】
-    Note over 线程1,锁对象 : 线程1加锁🔐
+    线程2 ->> 锁对象 : synchronized【释放锁，并唤醒被阻塞的线程】
+    Note over 线程1,锁对象 : 线程1拥有锁
     static i ->> 线程1 : getstatic i【读取到 i=-1】
     线程1 ->> 线程1 : iconst_1【准备常数 1】
     线程1 ->> 线程1 : iadd【自增，线程内 i=0】
     线程1 ->> static i : putstatic i【写入 i=0】
     Note over static i : 线程12赋值，i=0
-    线程1 ->> 锁对象 : synchronized【释放🔐】
+    线程1 ->> 锁对象 : synchronized【释放锁】
     Note over static i : 在两个线程自增和自减后，i=0
 ```
 
@@ -859,8 +859,8 @@ sequenceDiagram
 	participant EntryList
 	participant Owner
 	
-	Note over Owner : Thread-2
 	Note over WaitSet : Thread-1【WAITING】
+	Note over Owner : Thread-2
 	Note over EntryList : Thread-3【BLOCKED】
 	Note over EntryList : Thread-4【BLOCKED】
 	Note over EntryList : Thread-5【BLOCKED】
@@ -1010,15 +1010,15 @@ sequenceDiagram
 	participant 锁对象
 	participant 线程2 as 线程2（CPU2）
 
-    线程1 ->> 锁对象 : synchronized【尝试获取🔐，获取成功✅】
-    Note over 线程1,锁对象 : 线程1加锁🔐
+    线程1 ->> 锁对象 : synchronized【尝试获取锁】
+    Note over 线程1,锁对象 : 线程1拥有锁
     Note over 线程1 : 执行同步代码块
-    线程2 ->> 锁对象 : synchronized【尝试获取🔐，获取失败❎】
+    线程2 -x 锁对象 : synchronized【尝试获取锁】
     线程2 ->> 线程2 : 自旋重试
     Note over 线程1 : 执行完毕
-    Note over 线程1,锁对象 : 线程1解锁🔐
-    线程2 ->> 锁对象 : 自旋成功【获取成功✅】
-    Note over 线程2,锁对象 : 线程2加锁🔐
+    Note over 线程1,锁对象 : 线程1释放锁
+    线程2 ->> 锁对象 : 自旋成功
+    Note over 线程2,锁对象 : 线程2拥有锁
 ```
 
 ⭐️ **注意**：
@@ -1049,4 +1049,235 @@ public static void main(String[] args) {
     }
 }
 ```
+
+## wait()/notify()
+
+### 原理
+
+Owner 线程发现条件不满足，调用 `wait()` 方法，即可进入 WaitSet 变为 WAITING 状态。 
+
+- BLOCKED 和 WAITING 的线程都处于阻塞状态，不占用 CPU 时间片。
+- BLOCKED 线程会在 Owner 线程释放锁时唤醒；WAITING 线程会在 Owner 线程调用 `notify()` 或 `notifyAll()` 时唤醒，但唤醒后并不意味者立刻获得锁，仍需进入 EntryList 重新竞争。
+
+### sleep() 和 wait() 的区别
+
+- `sleep()` 是 `Thread` 方法，而 `wait()` 是 `Object` 的方法。
+- `sleep()` 不需要强制和 `synchronized` 配合使用，但 `wait()` 需要和 `synchronized` 一起用。
+- `sleep()` 在睡眠的同时不会释放对象锁的，但 `wait()` 在等待的时候会释放对象锁。
+- `sleep()` 线程的状态是 TIMED_WAITING ，`wait()` 不设置时间是 WAITING，设置了时间是 TIMED_WAITING。
+
+### wait()/notify() 的正确使用
+
+```java
+synchronized(lock){
+	while(工作/唤醒条件不成立){
+		lock.wait();
+	}
+	// TODO:执行工作任务
+}
+
+// 其他线程
+synchronized(lock){
+    // TODO:修改工作/唤醒条件
+    // 唤醒全部，不满足条件的再继续wait()
+	lock.notifyAll();
+}
+```
+
+### 同步模式-保护性暂停
+
+**一个线程等待另一个线程的结果。**和 `join()` 的区别：`join()` 是一个线程等待另一个线程运行结束。
+
+<img src="https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210111-170850-06d197a23dc1d9a6d5da125bb6ac5b56.png" style="zoom:50%;" />
+
+```java
+public class GuardedObject<T> {
+    private T data;
+
+    // 获取数据
+    public T get() {
+        synchronized (this) {
+            while (data == null) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return data;
+        }
+    }
+
+    // 获取数据（超时）
+    public T get(long timeout) {
+        synchronized (this) {
+            // 开始等待的时间
+            long beginTime = System.currentTimeMillis();
+            // 已经等待的时间
+            long passedTime = 0;
+            while (data == null) {
+                // 还需要等待的时间
+                long waitTime = timeout - passedTime;
+                // 如果已经超时，则退出循环
+                if (waitTime < 0) break;
+                try {
+                    this.wait(waitTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 计算已经等待了多久
+                passedTime = System.currentTimeMillis() - beginTime;
+            }
+            return data;
+        }
+    }
+
+    // 设置计算结果
+    public void complete(T data) {
+        synchronized (this){
+            this.data = data;
+            this.notifyAll();
+        }
+    }
+}
+```
+
+### 异步模式-消息队列
+
+- 与保护性暂停中的 GuardObject 不同，不需要产生结果和消费结果的线程一一对应。
+- 消费队列可以用来平衡生产和消费的线程资源。
+- 生产者仅负责产生结果数据，不关心数据该如何处理，而消费者专心处理结果数据。
+- 消息队列是有容量限制的，满时不会再加入数据，空时不会再消耗数据。
+- JDK中各种阻塞队列，采用的就是这种模式。
+
+```java
+public class MessageQueue<T> {
+    private final LinkedList<T> queue = new LinkedList<>();
+    private final int capacity;
+
+    public MessageQueue(int capacity) {
+        this.capacity = capacity;
+    }
+
+    // 从消息队列获取消息
+    public T take() {
+        synchronized (queue) {
+            while (queue.isEmpty()) {
+                try {
+                    queue.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            queue.notifyAll();
+            return queue.removeFirst();
+        }
+    }
+
+    // 向消息队列添加消息
+    public void put(T data) {
+        synchronized (queue) {
+            while (queue.size() >= capacity) {
+                try {
+                    queue.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            queue.addLast(data);
+            queue.notifyAll();
+        }
+    }
+}
+```
+
+## park()/unpark()
+
+`LockSupport.park()` 和 `LockSupport.unpark()` 实现线程的暂停和继续。阻塞状态为 WAITING。
+
+```java
+LockSupport.park();		// 检查有没有通行证，没有则暂停线程 WAITING
+LockSupport.unpark();	// 颁发一张通行证，继续运行线程 RUNNABLE
+```
+
+如果先调用 `unpark()` 再调用 `park()` ，则线程不会暂停。
+
+```java
+LockSupport.unpark();	// 先颁发一张通行证 TIMED_WAITING
+LockSupport.park();		// 检查有没有通行证，有则不暂停线程 RUNNABLE
+```
+
+## 线程活跃性
+
+### 死锁
+
+一个线程需要同时获取多把锁，这时就容易发生死锁。
+
+- `t1` 线程获得 `A对象` 的锁，接下来想获取 `B对象` 的锁。
+- `t2` 线程获得 `B对象` 的锁，接下来想获取 `A对象` 的锁。
+
+```mermaid
+sequenceDiagram
+	participant 线程1
+	participant 线程2
+	participant 锁对象A
+	participant 锁对象B
+	
+    线程1 ->> 锁对象A : synchronized【尝试获取锁】
+    Note over 线程1,锁对象A : 线程1拥有锁
+    线程2 ->> 锁对象B : synchronized【尝试获取锁】
+    Note over 线程2,锁对象B : 线程2拥有锁
+    线程1 -x 锁对象B : synchronized【尝试获取锁】
+    线程2 -x 锁对象A : synchronized【尝试获取锁】
+```
+```java
+Thread t1 = new Thread(() -> {
+    synchronized (A) {
+        Thread.sleep(1000);
+        synchronized (B) {
+        }
+    }
+});
+
+Thread t2 = new Thread(() -> {
+    synchronized (B) {
+        Thread.sleep(500);
+        synchronized (A) {
+        }
+    }
+});
+```
+
+### 活锁
+
+活锁出现在两个线程互相改变对方的结束条件，最后谁也无法结束。
+
+两个线程增加随机睡眠时间，可以防止活锁。
+
+```java
+int count = 10;
+Thread t1 = new Thread(() -> {
+    // 期望减到0就退出
+    while (count > 0) {
+        Thread.sleep(200);
+        count--;
+        System.out.println("- " + count);
+    }
+});
+
+Thread t2 = new Thread(() -> {
+    // 期望加到20就退出
+    while (count < 20) {
+        Thread.sleep(200);
+        count++;
+        System.out.println("  " + count);
+    }
+});
+```
+
+### 饥饿
+
+一个线程由于优先级太低，始终得不到CPU调度执行，也不能够结束。
+
+饥饿的情况不易演示，讲读写锁时会涉及饥饿问题。
 
