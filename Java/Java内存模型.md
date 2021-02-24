@@ -288,7 +288,10 @@ public class ThreadTest {
 
 为了提高性能，在遵守 `as-if-serial` 语义的情况下，编译器和处理器常常会对指令做重排序。
 
-![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20201127-141444-3b962c822d00436596153efab022ad9c.png)
+```mermaid
+graph LR
+	S(源代码) --> 编译期优化重排序 -.-> 指令级并行重排序 -.-> 内存系统重排序 --> F(最终执行的指令序列)
+```
 
 分为3种类型：
 
