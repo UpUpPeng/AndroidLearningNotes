@@ -169,7 +169,7 @@ String s4 = "a" + 1;
 
 ①：没有真正的拼接操作。在编译阶段，就已经把 `"a"` 和 `"b"` 串在一起了。
 
-```java
+```shell
 Constant pool:
 	#1 = Methodref		#4.#20		// java/lang/Object."<init>":()V
 	#2 = String			#21			// ab
@@ -177,7 +177,7 @@ Constant pool:
 
 ②：没有真正的拼接操作。`final` 代表 `x` 的值不可改变，在编译阶段，其它引用 `x` 的地方都安全地被替换为 `"b"`。
 
-```java
+```shell
 Constant pool:
 	#1 = Methodref		#5.#22		// java/lang/0bject. "<init>":()V
 	#2 = String			#23			// b
@@ -186,7 +186,7 @@ Constant pool:
 
 ③：有真正的拼接操作。在编译阶段，加号运算符 `+` 会被替换成 `StringBuilder` 来进行字符串拼接。
 
-```java
+```shell
 Constant pool: 
 	#1 = Methodref		#9.#26		// fava/1ang/0bject. "<init>":()V
 	#2 = String			#27			// b
@@ -418,7 +418,6 @@ System.out.println(z == y); // true
 -XX:+UseG1GC -XX:+UseStringDeduplication 
 ```
 
-
 原理是让多个字符串对象引用同一个 `char[]` 来达到节省内存的目的。
 
 ![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210218-142543-334bd4711f3f0ff3e4583fc0f414015a.png)
@@ -525,4 +524,3 @@ System.out.println(s == str1.intern());		// false
 System.out.println(s == str2.intern());		// false
 System.out.println(str1 == str2.intern());	// true
 ```
-
