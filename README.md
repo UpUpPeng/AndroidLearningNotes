@@ -59,3 +59,7 @@
 #### 第三方框架解析
 
 马上更新...
+
+#### 其他
+
+- [Android代码规范](Android/other/Android%20代码规范.md)
