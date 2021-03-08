@@ -25,6 +25,7 @@
 
 #### 并发
 - [Java并发](Java/concurrency/Java并发.md)
+- [Java内存模型](Java/concurrency/Java内存模型.md)
 - [悲观锁和乐观锁](Java/concurrency/悲观锁和乐观锁.md)
 - [线程池](Java/concurrency/线程池.md)
 - [ThreadLocal](Java/concurrency/ThreadLocal.md)
@@ -32,7 +33,6 @@
 
 #### 其他
 - [Java泛型](Java/Java泛型.md)
-- [Java内存模型](Java/Java内存模型.md)
   
 <br/>
 
