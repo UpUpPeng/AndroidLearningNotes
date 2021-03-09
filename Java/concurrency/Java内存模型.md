@@ -177,28 +177,7 @@ putstatic	i 	// 将修改后的值存入静态变量i
 
 如果在执行指令的同时，发生了**上下文切换**，则可能一次自增和自减后 `i!=0`。
 
-```mermaid
-sequenceDiagram
-	participant 线程1
-	participant i as static i
-	participant 线程2
-	
-    Note over i : 在两个线程执行前，初始值 i=0
-    i ->> 线程2 : getstatic i【读取到 i=0】
-    线程2 ->> 线程2 : iconst_1【准备常数 1】
-    线程2 ->> 线程2 : isub【自减，线程内 i=-1】
-    线程2 -->> 线程1 : 上下文切换
-    Note over i : 线程2未赋值，i=0
-    i ->> 线程1 : getstatic i【读取到 i=0】
-    线程1 ->> 线程1 : iconst_1【准备常数 1】
-    线程1 ->> 线程1 : iadd【自增，线程内 i=1】
-    线程1 ->> i : putstatic i【写入 i=1】
-    Note over i : 线程1赋值，i=1
-    线程1 -->> 线程2 : 上下文切换
-    线程2 ->> i : putstatic i【写入 i=-1】
-    Note over i : 线程2赋值，并覆盖线程1的赋值，i=-1
-    Note over i : 在两个线程自增和自减后，i!=0
-```
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210309-154324-aa996ceb6a5e581a7687eeec2fe5cf8f.png)
 
 ### 2.3.2. 可见性
 
@@ -228,27 +207,7 @@ public class ThreadTest {
 - **理想情况**下，子线程结束运行 。
 - **实际情况**下，子线程仍然运行。 
 
-```mermaid
-sequenceDiagram
-	participant 线程1 as 线程1（CPU1）
-	participant i as 共享变量 run
-	participant 线程2 as 线程2（CPU2）
-	
-	Note over i : 主内存【run=true】
-	线程1 ->> i : 从主存中复制共享变量到工作内存
-	i -->> 线程1 : run=true
-	loop run==true
-		Note over 线程1 : 工作内存【run=true】
-	end
-	线程2 ->> i : 从主存中复制共享变量到工作内存
-	i -->> 线程2 : run=true
-	Note over 线程2 : 工作内存【run=true】
-	线程2 ->> 线程2: run=false
-	Note over 线程2 : 工作内存【run=false】
-	线程2 ->> i : 从工作内存中将共享变量同步到主内存
-	Note over i : 主内存【run=false】
-	Note over 线程1 : 工作内存【run=true】无法跳出循环
-```
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210309-154639-6b51729f2dffb5bd785abb5fab86b467.png)
 
 线程2执行 `run = false` 操作。但是这个修改对线程1是不可见的（线程1不知道线程2也修改了 `run` ），那么线程1运算时仍然从缓存中获取 `run`（旧的数据 `run` 为 `true`）。 这时候就出现了数据不一致问题。
 
@@ -288,10 +247,7 @@ public class ThreadTest {
 
 为了提高性能，在遵守 `as-if-serial` 语义的情况下，编译器和处理器常常会对指令做重排序。
 
-```mermaid
-graph LR
-	S(源代码) --> 编译期优化重排序 -.-> 指令级并行重排序 -.-> 内存系统重排序 --> F(最终执行的指令序列)
-```
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210309-154736-1639c5b1e53bbc000f595ad11c1809be.png)
 
 分为3种类型：
 

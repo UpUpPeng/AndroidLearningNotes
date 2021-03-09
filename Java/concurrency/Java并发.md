@@ -413,15 +413,7 @@ thread.interrupt();
 
 A线程优雅的停止B线程，并让B线程完成收尾工作。
 
-
-```mermaid
-graph LR
-   start(开始运行) --> isInterrupted{是否被中断}
-   isInterrupted -- 是 --> clear[执行清理工作] --> stop(结束运行)
-   isInterrupted -- 否 --> sleep{睡眠2秒}
-   sleep -- 有Interrupted异常 --> interrupted[设置中断标记为true] --> isInterrupted
-   sleep -- 无Interrupted异常 --> task[执行循环任务] --> isInterrupted
-```
+![](https://picture-1251081707.cos.ap-shanghai.myqcloud.com/20210309-153034-5bc4a0703c24bb8e924758ed1b272bb7.png)
 
 ```java
 Thread thread = new Thread(() -> {
