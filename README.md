@@ -1,3 +1,7 @@
+<!--
+ * @Date: 2021-05-01 16:23:19
+ * @LastEditors: pren@trip.com
+-->
 # Android学习笔记
 
 这些都是我在 Android 进阶学习和实践过程中，自己整理的笔记，没有太多讲解的内容。
@@ -54,7 +58,7 @@
 
 #### NDK
 
-- [C/C++基础](Android/ndk/C:C++基础.md)
+- [C/C++基础](Android/ndk/C++基础.md)
 - [C++面向对象](Android/ndk/C++面向对象.md)
 
 #### 官方组件解析

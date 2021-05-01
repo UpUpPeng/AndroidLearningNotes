@@ -1,23 +1,3 @@
-<!-- TOC -->
-
-- [1. 传统的Linux进程间通信](#1-传统的linux进程间通信)
-  - [1.1. 基本原理](#11-基本原理)
-  - [1.2. 管道和消息队列的原理](#12-管道和消息队列的原理)
-- [2. Binder原理](#2-binder原理)
-  - [2.1. Binder 是什么](#21-binder-是什么)
-  - [2.2. 动态内核可加载模块（LKM）](#22-动态内核可加载模块lkm)
-  - [2.3. 内存映射（mmap）](#23-内存映射mmap)
-  - [2.4. Binder 数据流转原理](#24-binder-数据流转原理)
-  - [2.5. Binder 和传统 IPC 对比](#25-binder-和传统-ipc-对比)
-    - [2.5.1. 传统 Linux 跨进程](#251-传统-linux-跨进程)
-    - [2.5.2. Binder 的优势](#252-binder-的优势)
-- [3. Binder 通信模型](#3-binder-通信模型)
-  - [3.1. Client / Server / ServiceManager / Binder Dirver](#31-client--server--servicemanager--binder-dirver)
-  - [3.2. Binder 通信过程](#32-binder-通信过程)
-- [4. Binder 原理步骤](#4-binder-原理步骤)
-
-<!-- /TOC -->
-
 # 1. 传统的Linux进程间通信
 
 ## 1.1. 基本原理

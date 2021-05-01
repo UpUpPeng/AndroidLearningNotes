@@ -1,31 +1,4 @@
 <!-- TOC -->
-
-- [1. ThreadLocal](#1-threadlocal)
-  - [1.1. 作用](#11-作用)
-  - [1.2. 使用场景](#12-使用场景)
-  - [1.3. 示例代码](#13-示例代码)
-- [2. ThreadLocal 原理解析](#2-threadlocal-原理解析)
-  - [2.1. 内部设计](#21-内部设计)
-    - [2.1.1. 早期方案](#211-早期方案)
-    - [2.1.2. JAVA 8 方案](#212-java-8-方案)
-  - [2.2. ThreadLocal 核心方法源码](#22-threadlocal-核心方法源码)
-    - [2.2.1. set 方法](#221-set-方法)
-    - [2.2.2. get 方法](#222-get-方法)
-    - [2.2.3. remove方法](#223-remove方法)
-- [3. ThreadLocalMap 源码分析](#3-threadlocalmap-源码分析)
-  - [3.1. ThreadLocalMap 类的基本结构](#31-threadlocalmap-类的基本结构)
-    - [3.1.1. 成员变量](#311-成员变量)
-    - [3.1.2. 存储元素](#312-存储元素)
-  - [3.2. ThreadLocal 内存泄漏](#32-threadlocal-内存泄漏)
-    - [3.2.1. 当key是强引用](#321-当key是强引用)
-    - [3.2.2. 当key是弱引用](#322-当key是弱引用)
-    - [3.2.3. 导致内存泄漏的原因](#323-导致内存泄漏的原因)
-  - [3.3. 解决Hash冲突](#33-解决hash冲突)
-    - [3.3.1. ThreadLocalMap 的构造方法](#331-threadlocalmap-的构造方法)
-    - [3.3.2. ThreadLocalMap 的 set 方法](#332-threadlocalmap-的-set-方法)
-
-<!-- /TOC -->
-
 # 1. ThreadLocal
 
 ThreadLocal是一个线程内部的数据存储类，可以在指定线程中存储数据，且只有在该指定线程中才可以获取存储数据。
