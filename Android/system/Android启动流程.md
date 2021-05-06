@@ -6,10 +6,10 @@
 
 1. **启动电源以及系统启动：** 当电源按下时，引导芯片代码从预定义的地方（固化在 ROM）开始执行。加载引导程序 BootLoader 到 RAM，然后执行。
 2. **引导程序 Bootloader：** 引导程序 BootLoader 是在 Android 操作系统开始运行前的一个小程序，它的主要作用是把操作系统拉起来并运行。
-3. **Linux内核启动：** 当内核启动时，设置缓存、被保护存储器、计划列表、加载驱动。当内核完成系统设置时，它首先在系统文件中寻找 `init.rc` 文件，并启动 init 进程 。 
+3. **Linux 内核启动：** 当内核启动时，设置缓存、被保护存储器、计划列表、加载驱动。当内核完成系统设置时，它首先在系统文件中寻找 `init.rc` 文件，并启动 init 进程 。 
 4. **init 进程启动：** 初始化和启动属性服务，井且启动 Zygote 进程。
 5. **Zygote 进程启动：** 创建 Java 虚拟机并为 Java 虚拟机注册 JNI 方法，创建服务器端 Socket，启动 SystemServer 进程。
-6. **SystemServer进程启动：** 启动 Binder 线程池和 SystemServiceManager，并且启动各种系统服务。
+6. **SystemServer 进程启动：** 启动 Binder 线程池和 SystemServiceManager，并且启动各种系统服务。
 7. **Launcher 启动：** 被 SystemServer 进程启动的 AMS 会启动 Launcher，Launcher 启动后会将已安装应用的快捷图标显示到界面上。
 
 ---
@@ -18,7 +18,11 @@
 
 # init 进程启动
 
-init 进程是 Android 系统中用户空间的第一个进程，进程号为 1，是 Android 系统启动流程中一个关键的步骤。主要用来初始化和启动属性服务，也用来启动 Zygote 进程。
+init 进程是 Android 系统中用户空间的第一个进程，进程号为 1，是 Android 系统启动流程中一个关键的步骤。主要做了以下三件事情：
+
+- 创建和挂载启动所需的文件目录。
+- 初始化和启动属性服务。
+- 解析 `init.rc` 配置文件并启动 Zygote 进程。
 
 ## init 进程的入口函数
 
@@ -241,5 +245,37 @@ service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-s
     onrestart restart netd
     onrestart restart wificond
     writepid /dev/cpuset/foreground/tasks
+```
+
+Service 用于通知 `init` 进程创建名为 `zygote` 的进程，执行程序路径为 `/system/bin/app_process64`，后面的是要传给 `app_process64` 的参数，且 Zygote 的 `classname` 为 `main`。如果 `audioserver`、`cameraserver`、`media` 等进程终止了，就需要进行 restart。
+
+---
+
+<br/>
+
+# Zygote 进程启动
+
+Zygote 进程称为孵化器，DVM 和 ART 是由它创建的，APP进程和系统的 SystemServer 进程是由它 fock（复制进程） 创建的，因此可以在内部获取一个 DVM 或者 ART 的实例副本。
+
+> Zygote 进程的名称并不是“zygote”，而是“app_process”，这个名称是在 Android.mk 中定义的。Zygote 进程启动后，Linux 系统下的 pctrl 系统会调用 app_process，将其名称换成了“zygote”。
+
+## 启动过程
+
+```mermaid
+sequenceDiagram
+  participant app_main.cpp
+  participant AndroidRuntime.cpp
+  participant ZygoteInit.java
+  participant ZygoteServer.java
+  note over app_main.cpp: main()
+  app_main.cpp ->> AndroidRuntime.cpp: runtime.start()
+  note over AndroidRuntime.cpp: 启动Java虚拟机
+  note over AndroidRuntime.cpp: 为Java虚拟机注册JNI方法
+  AndroidRuntime.cpp ->> ZygoteInit.java: 通过JNI调用<br/>ZygoteInit的main()
+  note over ZygoteInit.java: 创建一个Server端的<br/>Socket，socketName<br/>为“zygote”
+  ZygoteInit.java ->> ZygoteServer.java: registerServerSocket()
+  note over ZygoteInit.java: 启动SystemServer进程
+  note over ZygoteInit.java: 等待AMS请求
+  ZygoteInit.java ->> ZygoteServer.java: runSelectLoop()
 ```
 
