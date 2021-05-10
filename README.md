@@ -51,6 +51,7 @@
 - [内存优化](Android/optimize/内存优化.md)
 - [图片优化](Android/optimize/图片优化.md)
 - [进程保活](Android/optimize/进程保活.md)
+- [热修复](Android/optimize/热修复.md)
 
 #### NDK
 
