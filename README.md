@@ -1,3 +1,7 @@
+<!--
+ * @Date: 2021-05-06 10:24:30
+ * @LastEditors: pren@trip.com
+-->
 # Android学习笔记
 
 这些都是我在 Android 进阶学习和实践过程中，自己整理的笔记，没有太多讲解的内容。
@@ -40,6 +44,7 @@
 
 #### 系统核心原理
 
+- [Android虚拟机](Android/system/Android虚拟机.md)
 - [Binder机制](Android/system/Binder机制.md)
 - [消息机制](Android/system/消息机制.md)
 - [事件分发机制](Android/system/事件分发机制.md)
